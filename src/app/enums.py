@@ -6,6 +6,7 @@ class DBScope(int, Enum):
     READWRITE = 2
     SUPERUSER = 3
 
+
 class UseAuthBool(str, Enum):
-    TRUE = 'true'
-    FALSE = 'false'
+    TRUE = "true"
+    FALSE = "false"
