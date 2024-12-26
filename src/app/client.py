@@ -64,8 +64,8 @@ class Client(Starlette):
         self._view_map: Dict[str, _View] = {}
         self._attach_views()
         self.mount("/public", StaticFiles(directory=self.public_dir), name="public")
-        self.add_route(f"/admin/login", admin_login, methods=["GET", "POST"])
-        self.add_route(f"/admin/dashboard", admin_dashboard, methods=["GET"])
+        self.add_route("/admin/login", admin_login, methods=["GET", "POST"])
+        self.add_route("/admin/dashboard", admin_dashboard, methods=["GET"])
 
 
     @staticmethod
