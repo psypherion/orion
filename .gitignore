@@ -4,3 +4,4 @@ views/
 public/
 .idea/
 __pycache__/
+.database/

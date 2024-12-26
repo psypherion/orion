@@ -6,10 +6,13 @@ import jinja2
 import uvicorn
 from starlette.applications import Starlette
 from starlette.requests import Request
-from starlette.responses import HTMLResponse
+from starlette.responses import HTMLResponse, Response
 from starlette.staticfiles import StaticFiles
 
 from .enums import DBScope, UseAuthBool
+from .login import LOGIN_PAGE
+from .dashboard import DASHBOARD
+from .database import Database
 
 
 class _View:
@@ -28,20 +31,42 @@ class _View:
         self.db_scope = db_scope
         self.methods = method or "GET"
 
+async def admin_login(request: Request):
+    if request.method == 'GET':
+        return HTMLResponse(LOGIN_PAGE)
+    if request.method == 'POST':
+        data = await request.json()
+        username = data.get('username')
+        password = data.get('password')
+        # verify username and password with database
+        return Response(content='{"message": "Login successful!"}', media_type='application/json')
+
+async def admin_dashboard(request: Request):
+    return HTMLResponse(DASHBOARD)
+
 
 class Client(Starlette):
     def __init__(
-        self, views_dir: str = "views", public_dir: str = "public", *args, **kwargs
+        self,
+        views_dir: str = "views",
+        public_dir: str = "public",
+        database_dir: str = ".database",
+        *args,
+        **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.views_dir = views_dir
         self.public_dir = public_dir
+        self.database = Database(database_dir)
         self.__jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(self.views_dir)
         )
         self._view_map: Dict[str, _View] = {}
         self._attach_views()
         self.mount("/public", StaticFiles(directory=self.public_dir), name="public")
+        self.add_route(f"/admin/login", admin_login, methods=["GET", "POST"])
+        self.add_route(f"/admin/dashboard", admin_dashboard, methods=["GET"])
+
 
     @staticmethod
     def __build_matched_raw_route(request: Request):
