@@ -5,3 +5,6 @@ public/
 .idea/
 __pycache__/
 .database/
+dist/
+*.pyc
+*.egg-info/

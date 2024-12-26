@@ -41,7 +41,7 @@ async def admin_login(request: Request):
         # verify username and password with database
         return Response(content='{"message": "Login successful!"}', media_type='application/json')
 
-async def admin_dashboard(request: Request):
+async def admin_dashboard(_: Request):
     return HTMLResponse(DASHBOARD)
 
 
