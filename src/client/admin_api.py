@@ -63,7 +63,7 @@ async def admin_dashboard(request: Request):
     return HTMLResponse(DASHBOARD)
 
 
-def add_admin_routes(app: Starlette):
+def attach_admin_routes(app: Starlette):
     app.add_route("/admin/login", admin_login, methods=["GET", "POST"])
     app.add_route("/admin/dashboard", admin_dashboard, methods=["GET"])
     app.add_route("/admin/api/bases", list_bases, methods=["GET"])

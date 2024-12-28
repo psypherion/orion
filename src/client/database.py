@@ -9,7 +9,7 @@ class Database:
             os.makedirs(__dir)
         self.__dir = __dir
 
-    def load_all(self) -> Dict[str, sqlite3.Connection]:
+    def fetch_all(self) -> Dict[str, sqlite3.Connection]:
         connections = {}
         for file in os.listdir(self.__dir):
             if file.endswith(".db"):

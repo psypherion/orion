@@ -10,7 +10,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
-from .admin_api import add_admin_routes
+from .admin_api import attach_admin_routes
 from .database import Database
 from .enums import DBScope, UseAuthBool
 
@@ -47,18 +47,14 @@ class Client(Starlette):
         self.views_dir = views_dir
         self.public_dir = public_dir
         self.database = Database(database_dir)
+        self.connections = self.database.fetch_all()
         self.__jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(self.views_dir)
         )
         self._view_map: Dict[str, _View] = {}
         self._attach_views()
-        self.connections = self.database.load_all()
         self.mount("/public", StaticFiles(directory=self.public_dir), name="public")
-        add_admin_routes(self)
-
-    def close_connections(self):
-        for con in self.connections.values():
-            con.close()
+        attach_admin_routes(self)
 
     def create_admin(
         self,
@@ -145,3 +141,21 @@ class Client(Starlette):
 
     def run(self, host: str = "localhost", port: int = 8000, *args, **kwargs):
         uvicorn.run(self, host=host, port=port, *args, **kwargs)
+
+    def on_startup(self):
+
+        def wrapper(coro):
+            self.add_event_handler("startup", coro)
+        return wrapper
+
+    def on_shutdown(self):
+
+        def wrapper(coro):
+
+            async def handler():
+                await coro()
+                for con in self.connections.values():
+                    con.close()
+
+            self.add_event_handler("shutdown", handler)
+        return wrapper
