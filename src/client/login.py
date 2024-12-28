@@ -94,19 +94,20 @@ LOGIN_PAGE = """
                 alert("Please enter both username and password.");
                 return;
             }
+            const hashed = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password));
+            const hashArray = Array.from(new Uint8Array(hashed));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            const auth = `${username}:${hashHex}`;
             const response = await fetch("/admin/login", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "X-Authorization-Token": auth
                 },
-                body: JSON.stringify({ username, password })
             });
             const data = await response.json();
-            if (response.status === 200) {
+            status.textContent = data.message;
+            if (response.ok) {
                 window.location.href = "/admin/dashboard";
-            } else {
-                status.style.color = "red";
-                status.innerText = data.message;
             }
         }
     </script>

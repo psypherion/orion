@@ -1,3 +1,4 @@
+import hashlib
 import os
 import re
 from typing import Any, Dict, Optional
@@ -6,24 +7,23 @@ import jinja2
 import uvicorn
 from starlette.applications import Starlette
 from starlette.requests import Request
-from starlette.responses import HTMLResponse, Response
+from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
-from .enums import DBScope, UseAuthBool
-from .login import LOGIN_PAGE
-from .dashboard import DASHBOARD
+from .admin_api import add_admin_routes
 from .database import Database
+from .enums import DBScope, UseAuthBool
 
 
 class _View:
     def __init__(
-            self,
-            *,
-            file_path: str,
-            route: str,
-            use_auth: UseAuthBool = UseAuthBool.FALSE,
-            db_scope: DBScope = DBScope.READONLY,
-            method: Optional[str] = None,
+        self,
+        *,
+        file_path: str,
+        route: str,
+        use_auth: UseAuthBool = UseAuthBool.FALSE,
+        db_scope: DBScope = DBScope.READONLY,
+        method: Optional[str] = None,
     ):
         self.file_path = file_path
         self.route = route
@@ -32,34 +32,18 @@ class _View:
         self.methods = method or "GET"
 
 
-async def admin_login(request: Request):
-    if request.method == 'GET':
-        return HTMLResponse(LOGIN_PAGE)
-    if request.method == 'POST':
-        data = await request.json()
-        username = data.get('username')
-        password = data.get('password')
-        # verify username and password with database
-        return Response(content='{"message": "Login successful!"}', media_type='application/json')
-
-
-async def admin_dashboard(_: Request):
-    return HTMLResponse(DASHBOARD)
-
-
 class Client(Starlette):
     def __init__(
-            self,
-            *,
-            superuser: str = "admin",
-            superuser_password: str = "adminpassword",
-            views_dir: str = "views",
-            public_dir: str = "public",
-            database_dir: str = ".database",
-            *args,
-            **kwargs
+        self,
+        views_dir: str = "views",
+        public_dir: str = "public",
+        database_dir: str = ".database",
+        *args,
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
+        self.superuser = None
+        self.password = None
         self.views_dir = views_dir
         self.public_dir = public_dir
         self.database = Database(database_dir)
@@ -68,9 +52,48 @@ class Client(Starlette):
         )
         self._view_map: Dict[str, _View] = {}
         self._attach_views()
+        self.connections = self.database.load_all()
         self.mount("/public", StaticFiles(directory=self.public_dir), name="public")
-        self.add_route("/admin/login", admin_login, methods=["GET", "POST"])
-        self.add_route("/admin/dashboard", admin_dashboard, methods=["GET"])
+        add_admin_routes(self)
+
+    def close_connections(self):
+        for con in self.connections.values():
+            con.close()
+
+    def create_admin(
+        self,
+        *,
+        username: str,
+        password: str,
+        name: str,
+        email: str,
+        access_level: int = 0,
+    ):
+        con = self.database.connect("admin.db")
+        self.connections["admin.db"] = con
+        con.execute(
+            """
+            CREATE TABLE IF NOT EXISTS admins (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                access_level INTEGER DEFAULT 0,
+                password TEXT NOT NULL,
+                UNIQUE(username),
+                CHECK(LENGTH(username) > 0),
+                CHECK(LENGTH(password) > 8),
+                CHECK(LENGTH(username) < 100)
+            )
+            """
+        )
+        hashed = hashlib.sha256(password.encode(), usedforsecurity=True).hexdigest()
+        con.execute(
+            "INSERT INTO admins (username, name, email, access_level, password) VALUES (?, ?, ?, ?, ?)",
+            (username, name, email, access_level, hashed),
+        )
+        con.commit()
+        return con
 
     @staticmethod
     def __build_matched_raw_route(request: Request):
