@@ -17,19 +17,20 @@ from .database import Database
 
 class _View:
     def __init__(
-        self,
-        *,
-        file_path: str,
-        route: str,
-        use_auth: UseAuthBool = UseAuthBool.FALSE,
-        db_scope: DBScope = DBScope.READONLY,
-        method: Optional[str] = None,
+            self,
+            *,
+            file_path: str,
+            route: str,
+            use_auth: UseAuthBool = UseAuthBool.FALSE,
+            db_scope: DBScope = DBScope.READONLY,
+            method: Optional[str] = None,
     ):
         self.file_path = file_path
         self.route = route
         self.use_auth = use_auth
         self.db_scope = db_scope
         self.methods = method or "GET"
+
 
 async def admin_login(request: Request):
     if request.method == 'GET':
@@ -41,18 +42,22 @@ async def admin_login(request: Request):
         # verify username and password with database
         return Response(content='{"message": "Login successful!"}', media_type='application/json')
 
+
 async def admin_dashboard(_: Request):
     return HTMLResponse(DASHBOARD)
 
 
 class Client(Starlette):
     def __init__(
-        self,
-        views_dir: str = "views",
-        public_dir: str = "public",
-        database_dir: str = ".database",
-        *args,
-        **kwargs
+            self,
+            *,
+            superuser: str = "admin",
+            superuser_password: str = "adminpassword",
+            views_dir: str = "views",
+            public_dir: str = "public",
+            database_dir: str = ".database",
+            *args,
+            **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.views_dir = views_dir
@@ -66,7 +71,6 @@ class Client(Starlette):
         self.mount("/public", StaticFiles(directory=self.public_dir), name="public")
         self.add_route("/admin/login", admin_login, methods=["GET", "POST"])
         self.add_route("/admin/dashboard", admin_dashboard, methods=["GET"])
-
 
     @staticmethod
     def __build_matched_raw_route(request: Request):

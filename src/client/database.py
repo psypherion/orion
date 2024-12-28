@@ -7,8 +7,8 @@ class Database:
             os.makedirs(__dir)
         self.__dir = __dir
 
-    def create(self, name: str) -> sqlite3.Connection:
-        return sqlite3.connect(f"{self.__dir}/{name}")
-
     def connect(self, name: str) -> sqlite3.Connection:
         return sqlite3.connect(f"{self.__dir}/{name}")
+
+    def remove(self, name: str):
+        os.remove(f"{self.__dir}/{name}")
