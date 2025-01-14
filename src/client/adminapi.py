@@ -5,15 +5,15 @@ from starlette.responses import HTMLResponse, JSONResponse, Response
 from .authentication import authenticate
 from .dashboard import DASHBOARD
 from .login import LOGIN_PAGE
-from .utils import is_admin
+from .utils import adminonly
 
 
-@is_admin
+@adminonly
 async def list_bases(request: Request):
     return JSONResponse(content={"bases": request.app.database.list_all()})
 
 
-@is_admin
+@adminonly
 async def list_tables(request: Request):
     base = request.path_params.get("base")
     if base is None:
@@ -21,7 +21,7 @@ async def list_tables(request: Request):
     return JSONResponse(content={"tables": request.app.database.list_tables(base)})
 
 
-@is_admin
+@adminonly
 async def table_to_json(request: Request):
     base = request.path_params.get("base")
     table = request.path_params.get("table")

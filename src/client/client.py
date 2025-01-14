@@ -10,7 +10,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
-from .admin_api import attach_admin_routes
+from .adminapi import attach_admin_routes
 from .database import Database
 from .enums import DBScope, UseAuthBool
 

@@ -6,7 +6,7 @@ from starlette.responses import JSONResponse
 from .authentication import authenticate
 
 
-def is_admin(coro):
+def adminonly(coro):
     async def wrapper(request: Request, *args, **kwargs):
         auth = await authenticate(
             request, database="admin.db", table="admins", header_name="Cookie"
