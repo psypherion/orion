@@ -59,6 +59,10 @@ if __name__ == '__main__':
 ```
 ## Creating Component
 #### Path: components/footer.html
+> ⚠️ Currently the CSS and JS is globally scoped. 
+So there is a chance of namespace collision for both CSS and JS.
+To avoid this, one can use inline CSS or stick to a naming convention for CSS and JS.
+In the future, it will be scoped to the component.
 ```html
 <style>
     footer{
@@ -85,6 +89,10 @@ if __name__ == '__main__':
 </template>
 
 <script>
+    const footer = document.querySelector('footer');
+    footer.addEventListener('click', () => {
+        alert('Footer clicked');
+    });
 </script>
 ```
 ## Importing Component
