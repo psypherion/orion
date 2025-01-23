@@ -13,6 +13,7 @@ from starlette.staticfiles import StaticFiles
 from .adminapi import attach_admin_routes
 from .database import Database
 from .enums import DBScope, UseAuthBool
+from .renderer import Tree
 
 
 class _View:
@@ -114,10 +115,10 @@ class Client(Starlette):
 
     async def _handler(self, request: Request, *args, **kwargs):
         view = self._view_map[self.__build_matched_raw_route(request)]
-        template = self.__jinja_env.get_template(view.file_path)
-        return HTMLResponse(
-            template.render(request=request, view=view, *args, **kwargs)
-        )
+        with Tree(f"{self.views_dir}/{view.file_path}") as tree:
+            template = jinja2.Template(str(tree))
+            template = template.render(request=request, view=view, *args, **kwargs)
+            return HTMLResponse(content=template)
 
     def _attach_views(self):
         for root, dirs, files in os.walk(self.views_dir):

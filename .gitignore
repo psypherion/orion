@@ -1,6 +1,7 @@
 .venv/
 main.py
 views/
+components/
 public/
 .idea/
 __pycache__/
