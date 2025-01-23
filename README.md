@@ -42,3 +42,67 @@ async def shutdown():
 if __name__ == '__main__':
     app.run()
 ```
+## Basic File Structure
+```
+.
+├── main.py
+├── views/
+│   ├── index.html
+│   ├── users/{user_id}.html
+│   └── users/{user_id}/guilds/{guild_id}.html
+├── public/
+│   ├── style.css
+│   └── script.js
+└── components/
+    ├── navbar.html
+    └── footer.html
+```
+## Creating Component
+#### Path: components/footer.html
+```html
+<style>
+    footer{
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: white;
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    footer p {
+        text-align: center;
+        margin: 0;
+        color: black;
+    }
+</style>
+
+<template>
+    <footer>
+        <p>© 2025 Orion</p>
+    </footer>
+</template>
+
+<script>
+</script>
+```
+## Importing Component
+#### Path: views/index.html
+```html
+<!--<cfg>method: GET, use_auth: false, database_scope: readonly</cfg>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orion</title>
+    <link rel="stylesheet" href="/public/style.css">
+    <style></style>
+</head>
+<body>
+    <p>The route is: {{view.route}}</p>
+    <{./components/footer}>
+    <script></script>
+</body>
+</html>
+```
