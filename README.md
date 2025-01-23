@@ -2,7 +2,7 @@
 
 #### Your web framework redefined.
 
-Orion is a web framework that is designed to be simple, fast, and easy to use. It is built on top of the [Starlette](https://www.starlette.io/) ASGI framework and is designed to be a drop-in replacement for it. Orion is designed to be simple and easy to use, with a focus on performance and ease of use.
+Orion is a lightweight, high-performance, and modular web framework built on the Starlette ASGI framework. It is designed to be simple, fast, and user-friendly, with a strong focus on performance, ease of use, and modularity. Orion provides developers with the flexibility to extend and customize its functionality, making it an excellent choice for building modern and scalable web applications.
 
 ## Features
 - Simple and easy to use
