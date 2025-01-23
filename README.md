@@ -89,8 +89,7 @@ In the future, it will be scoped to the component.
 </template>
 
 <script>
-    const footer = document.querySelector('footer');
-    footer.addEventListener('click', () => {
+    document.querySelector('footer').addEventListener('click', () => {
         alert('Footer clicked');
     });
 </script>
