@@ -252,4 +252,4 @@ In the future, it will be scoped to the component.
 </html>
 ```
 ## Screenshots
-![image](/assets/screenshot.png)
+![image](/assets/sample.png)
