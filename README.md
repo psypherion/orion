@@ -26,9 +26,9 @@ pip install git+https://github.com/jnsougata/orion.git
 Here is a simple example of how to create a simple web application using Orion:
 
 ```python
-from orion.client import Client
+from orion import Orion
 
-app = Client()
+app = Orion()
 
 
 @app.on_startup()
@@ -64,36 +64,173 @@ So there is a chance of namespace collision for both CSS and JS.
 To avoid this, one can use inline CSS or stick to a naming convention for CSS and JS.
 In the future, it will be scoped to the component.
 ```html
-<style>
-    footer{
+<template>
+    <footer
+        style="
         left: 0;
         bottom: 0;
         width: 100%;
-        background-color: white;
+        padding: 10px;
+        background-color: rgba(255,255,255,0.18);
         position: fixed;
         display: flex;
         justify-content: center;
-        align-items: center;
-    }
-    footer p {
+        align-items: center;"
+    >
+        <p
+        style="
         text-align: center;
         margin: 0;
-        color: black;
-    }
-</style>
-
-<template>
-    <footer>
-        <p>© 2025 Orion</p>
+        color: #ccc;
+        background-color: transparent"
+        >© 2025 Orion</p>
     </footer>
 </template>
 
 <script>
     document.querySelector('footer').addEventListener('click', () => {
-        alert('Footer clicked');
+        alert('You clicked the footer!');
     });
 </script>
 ```
+### Path: components/counter.html
+```html
+<style>
+    #count {
+        font-size: 20px;
+    }
+    .counter_button {
+        padding: 10px 20px;
+        border-radius: 10px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+    }
+    #count {
+        font-size: 20px;
+        text-align: center;
+    }
+</style>
+
+<template>
+    <div style="min-width: 500px; display: flex; align-items: center; justify-content: space-between; padding: 10px 0">
+        <button id="decrement" class="counter_button">-</button>
+        <span id="count">0</span>
+        <button id="increment" class="counter_button">+</button>
+    </div>
+</template>
+
+<script>
+  let count = 0;
+    const countEl = document.querySelector('#count');
+    document.querySelector('#decrement').addEventListener('click', () => {
+      if (count === 0) return;
+        count--;
+        countEl.textContent = String(count);
+    });
+    document.querySelector('#increment').addEventListener('click', () => {
+        count++;
+        countEl.textContent = String(count);
+    });
+</script>
+```
+### Path: components/file_uploader.html
+```html
+<style>
+    #file {
+        display: none;
+    }
+    #upload {
+        display: block;
+        margin: 10px auto;
+    }
+    #pseudo-input {
+        min-width: 500px;
+        min-height: 300px;
+        border: 2px dashed rgba(255, 255, 255, 0.07);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    #filename {
+        margin: 0;
+        text-align: center;
+        background-color: transparent;
+    }
+    .action_button {
+        width: 200px;
+        padding: 10px 20px;
+        margin: 10px;
+        border-radius: 10px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+    }
+    #clear {
+        background-color: #dc3545;
+    }
+    #message {
+        visibility: hidden;
+        padding: 10px;
+        background-color: transparent;
+    }
+
+</style>
+
+
+<template>
+    <input type="file" id="file" name="file" />
+    <div id="pseudo-input">
+        <p id="filename">No file chosen</p>
+    </div>
+    <div style="display: flex">
+        <button id="upload" class="action_button">Upload</button>
+        <button id="clear" class="action_button">Clear</button>
+    </div>
+</template>
+
+<script>
+    const hiddenInput = document.querySelector('#file');
+    const pseudoInput = document.querySelector('#pseudo-input');
+    pseudoInput.addEventListener('click', () => {
+        hiddenInput.click();
+    });
+    hiddenInput.addEventListener('change', () => {
+        document.querySelector('#filename').textContent = hiddenInput.files[0].name;
+    });
+    document.querySelector('#clear').addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        hiddenInput.value = '';
+        document.querySelector('#filename').textContent = 'No file chosen';
+        pseudoInput.style.borderColor = 'rgba(255, 255, 255, 0.07)';
+    });
+    document.querySelector('#upload').addEventListener('click', async () => {
+        if (!hiddenInput.files.length) {
+            alert('No file chosen');
+            return;
+        }
+        const formData = new FormData();
+        formData.append('file', hiddenInput.files[0]);
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+        if (response.ok) {
+            pseudoInput.style.borderColor = 'rgba(40,167,69,0.56)';
+        } else {
+            pseudoInput.style.borderColor = 'rgba(220,53,69,0.87)';
+        }
+    });
+</script>
+```
+
 ## Importing Component
 #### Path: views/index.html
 ```html
@@ -107,9 +244,12 @@ In the future, it will be scoped to the component.
     <style></style>
 </head>
 <body>
-    <p>The route is: {{view.route}}</p>
+    <{./components/counter}>
+    <{./components/file_uploader}>
     <{./components/footer}>
     <script></script>
 </body>
 </html>
 ```
+## Screenshots
+![image](/assets/screenshot.png)

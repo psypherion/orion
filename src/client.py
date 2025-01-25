@@ -33,7 +33,7 @@ class _View:
         self.methods = method or "GET"
 
 
-class Client(Starlette):
+class Orion(Starlette):
     def __init__(
         self,
         views_dir: str = "views",
