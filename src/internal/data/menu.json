@@ -1,0 +1,109 @@
+{
+    "menu": {
+      "rice": {
+        "food_id": "rice",
+        "food_name": "Rice",
+        "food_price": 50,
+        "food_img": "https://example.com/images/rice.jpg",
+        "food_amt": "200g",
+        "food_desc": "Steamed white rice, a staple side dish."
+      },
+      "dal": {
+        "food_id": "dal",
+        "food_name": "Dal",
+        "food_price": 40,
+        "food_img": "https://example.com/images/dal.jpg",
+        "food_amt": "150ml",
+        "food_desc": "Rich and flavorful lentil soup."
+      },
+      "sabji": {
+        "food_id": "sabji",
+        "food_name": "Sabji",
+        "food_price": 60,
+        "food_img": "https://example.com/images/sabji.jpg",
+        "food_amt": "150g",
+        "food_desc": "Mixed vegetable curry with mild spices."
+      },
+      "alu_bhaja": {
+        "food_id": "alu_bhaja",
+        "food_name": "Alu Bhaja",
+        "food_price": 30,
+        "food_img": "https://example.com/images/alubhaja.jpg",
+        "food_amt": "100g",
+        "food_desc": "Crispy fried potatoes seasoned with spices."
+      },
+      "salad": {
+        "food_id": "salad",
+        "food_name": "Salad",
+        "food_price": 25,
+        "food_img": "https://example.com/images/salad.jpg",
+        "food_amt": "100g",
+        "food_desc": "Fresh and healthy mixed vegetable salad."
+      },
+      "chicken": {
+        "food_id": "chicken",
+        "food_name": "Chicken",
+        "food_price": 150,
+        "food_img": "https://example.com/images/chicken.jpg",
+        "food_amt": "200g",
+        "food_desc": "Succulent chicken curry cooked with aromatic spices."
+      },
+      "mutton": {
+        "food_id": "mutton",
+        "food_name": "Mutton",
+        "food_price": 200,
+        "food_img": "https://example.com/images/mutton.jpg",
+        "food_amt": "200g",
+        "food_desc": "Tender mutton curry with a rich gravy."
+      },
+      "paneer": {
+        "food_id": "paneer",
+        "food_name": "Paneer",
+        "food_price": 120,
+        "food_img": "https://example.com/images/paneer.jpg",
+        "food_amt": "150g",
+        "food_desc": "Creamy paneer curry with a blend of spices."
+      },
+      "roti": {
+        "food_id": "roti",
+        "food_name": "Roti",
+        "food_price": 10,
+        "food_img": "https://example.com/images/roti.jpg",
+        "food_amt": "1 piece",
+        "food_desc": "Soft whole wheat flatbread."
+      },
+      "non_veg_thali": {
+        "food_id": "non_veg_thali",
+        "food_name": "Non-Veg Thali",
+        "food_price": 300,
+        "food_img": "https://example.com/images/nonveg-thali.jpg",
+        "food_amt": "1 plate",
+        "food_desc": "Complete non-veg platter with rice, dal, chicken, and sides."
+      },
+      "veg_thali": {
+        "food_id": "veg_thali",
+        "food_name": "Veg Thali",
+        "food_price": 200,
+        "food_img": "https://example.com/images/veg-thali.jpg",
+        "food_amt": "1 plate",
+        "food_desc": "Complete vegetarian platter with rice, dal, sabji, and sides."
+      },
+      "chutney": {
+        "food_id": "chutney",
+        "food_name": "Chutney",
+        "food_price": 15,
+        "food_img": "https://example.com/images/chutney.jpg",
+        "food_amt": "50g",
+        "food_desc": "Tangy and spicy side made from fresh herbs and spices."
+      },
+      "papad": {
+        "food_id": "papad",
+        "food_name": "Papad",
+        "food_price": 10,
+        "food_img": "https://example.com/images/papad.jpg",
+        "food_amt": "1 piece",
+        "food_desc": "Crispy roasted or fried papadum."
+      }
+    }
+  }
+  
